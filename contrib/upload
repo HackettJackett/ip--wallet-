@@ -1,0 +1,18 @@
+#!/bin/bash
+# uploadserver is set in /etc/hosts
+
+set -e
+
+version=`git describe --tags`
+echo $version
+
+here=$(dirname "$0")
+cd $here/../dist
+
+sftp -oBatchMode=no -b - thomasv@uploadserver << !
+   cd electrum-downloads-airlock
+   mkdir $version
+   cd $version
+   mput *
+   bye
+!
